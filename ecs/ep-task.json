@@ -9,7 +9,7 @@
         "name": "ep-app",
         "image": "ngocvd4/ep-platform:latest",
         "cpu": 256,
-        "memory": 256,
+        "memory": 512,
         "essential": true,
         "portMappings": [
           {
