@@ -1,4 +1,4 @@
-name: Build and Deploy to AWS ECS
+name: Build and Deploy to ECS
 
 on:
   push:
@@ -6,48 +6,27 @@ on:
       - main
 
 jobs:
-  build-and-push:
-    name: Build Docker Image, Push to Docker Hub, Deploy ECS
+  deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout source
+    - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build Docker image
+      run: docker build -t ngocvd4/ep-platform:latest .
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: ./app
-        push: true
-        tags: ngocvd4/ep-platform:latest
-    
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-northeast-1
+    - name: Push image to Docker Hub
+      run: docker push ngocvd4/ep-platform:latest
 
-    - name: Render new ECS Task Definition
-      id: render
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: ./ecs/ep-task.json
-        container-name: ep-app
-        image: ngocvd4/ep-platform:latest
-    
-    - name: Deploy to ECS
+    - name: Force new ECS deployment
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
-        cluster: ep-platform-cluster
+        task-definition: ./ecs-fargate/task-definition.json
         service: ep-platform-service
-        task-definition: ${{ steps.render.outputs.task-definition }}
+        cluster: ep-platform-cluster
+        wait-for-service-stability: true

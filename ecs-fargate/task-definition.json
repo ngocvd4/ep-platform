@@ -1,0 +1,14 @@
+[
+    {
+      "name": "ep-app",
+      "image": "ngocvd4/ep-platform:latest",
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true
+    }
+  ]
+  
