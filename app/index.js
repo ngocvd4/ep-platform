@@ -7,7 +7,7 @@ const html = `
   <!DOCTYPE html>
   <html>
   <head>
-    <title>EP Platform</title>
+    <title>EP</title>
     <style>
       body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f4f4f4; }
       h1 { color: #2e6da4; }
@@ -16,9 +16,9 @@ const html = `
     </style>
   </head>
   <body>
-    <h1>🚀 Hello from EP Platform on ECS!</h1>
+    <h1>Hello from EP on ECS!</h1>
     <p>This app is deployed with Terraform + GitHub Actions + Docker + Fargate</p>
-    <div class="version">Deployed at: ${new Date().toLocaleString()}/ Verrsion:1.0.0</div>
+    <div class="version">Deployed at: ${new Date().toLocaleString("ja-JP", { timeZone: "UTC" })}/ Verrsion:1.1.0</div>
   </body>
   </html>
 `;
