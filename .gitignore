@@ -134,3 +134,26 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Terraform state
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Local overrides
+terraform.tfvars
+terraform.tfvars.json
+
+# Crash logs
+crash.log
+
+# Plan files
+*.tfplan
+
+# Sensitive output
+*.pem
+*.key
+*.env
+
+
