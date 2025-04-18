@@ -31,3 +31,4 @@ jobs:
         service: ep-platform-service
         cluster: ep-platform-cluster
         wait-for-service-stability: true
+        region: ap-northeast-1
