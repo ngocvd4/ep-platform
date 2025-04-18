@@ -9,7 +9,7 @@
         "name": "ep-app",
         "image": "ngocvd4/ep-platform:latest",
         "cpu": 256,
-        "memory": 512,
+        "memory": 256,
         "essential": true,
         "portMappings": [
           {
@@ -17,7 +17,22 @@
             "hostPort": 3000,
             "protocol": "tcp"
           }
-        ]
+        ],
+        "healthCheck": {
+          "command": ["CMD-SHELL", "curl -f http://localhost:3000/ || exit 1"],
+          "interval": 30,
+          "timeout": 5,
+          "retries": 3,
+          "startPeriod": 10
+        },
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-group": "/ecs/ep-platform-task",
+            "awslogs-region": "ap-northeast-1",
+            "awslogs-stream-prefix": "ep"
+          }
+        }
       }
     ]
   }
