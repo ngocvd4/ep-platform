@@ -27,7 +27,7 @@ jobs:
         context: ./app
         push: true
         tags: ngocvd4/ep-platform:latest
-        
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
@@ -35,11 +35,19 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-1
 
-    - name: Force new ECS deployment
+    - name: Render updated ECS task definition
+      id: render
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ecs-fargate/task-definition.json
+        container-name: ep-platform-container
+        image: ngocvd4/ep-platform:latest
+
+    - name: Deploy to ECS
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
-        task-definition: ./ecs-fargate/task-definition.json
+        task-definition: ${{ steps.render.outputs.task-definition }}
         service: ep-platform-service
         cluster: ep-platform-cluster
         wait-for-service-stability: true
-        region: ap-northeast-1
+
